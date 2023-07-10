@@ -24,10 +24,12 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/ensemble")
 @Slf4j
 public class EnsembleController {
+	
+	//Instantiates the "EnsembleService" class
 	@Autowired
 	private EnsembleService ensembleService;
 	
-	
+	//Creates a project through the REST API client.
 	@PostMapping("/project")
 	@ResponseStatus(code = HttpStatus.CREATED)
 	public ProjectData createEnsembleProject(@RequestBody ProjectData projectData) {
@@ -35,6 +37,7 @@ public class EnsembleController {
 		return ensembleService.saveProject(projectData);
 	}
 	
+	//Updates a project through the REST API client.
 	@PutMapping("/project/{projectId}")
 	public ProjectData updateEnsembleProject(
 			@PathVariable Long projectId, @RequestBody ProjectData projectData) {
@@ -43,12 +46,14 @@ public class EnsembleController {
 		return ensembleService.saveProject(projectData);
 	}
 	
+	//Retrieves a project through the REST API client.
 	@GetMapping("/project/{projectId}")
 	public ProjectData retrieveEnsembleProject(@PathVariable Long projectId) {
 		log.info("Retrieving Ensemble project with ID={}", projectId);
 		return ensembleService.retrieveEnsembleProjectById(projectId);
 	}
 	
+	//Deletes a project through the REST API client.
 	@DeleteMapping("/project/{projectId}")
 	public Map<String, String> deleteProject(@PathVariable Long projectId) {
 		log.info("Deleting Ensemble project with ID=" + projectId + ".");
@@ -58,6 +63,7 @@ public class EnsembleController {
 				+ " was deleted successfully.");
 	}
 	
+	//Creates the project's songwriter through the REST API client.
 	@PostMapping("/project/{projectId}/songwriter")
 	@ResponseStatus(code = HttpStatus.CREATED)
 	public ProjectSongwriter addSongWriterToProject(
@@ -66,7 +72,8 @@ public class EnsembleController {
 		return ensembleService.saveSongwriter(projectId, projectSongwriter);
 	}
 	
-	@PutMapping("project/{projectId}/songwriter")
+	//Updates the project's songwriter through the REST API client.
+	@PutMapping("/project/{projectId}/songwriter")
 	public ProjectSongwriter updateSongwriter(
 			@PathVariable Long projectId, @RequestBody ProjectSongwriter projectSongwriter) {
 		log.info("Update songwriter with ID={}", projectId);
@@ -74,12 +81,10 @@ public class EnsembleController {
 		return ensembleService.saveSongwriter(projectId, projectSongwriter);
 	}
 	
-	@PostMapping("/songwriter/{songwriterId}/contribution")
-	@ResponseStatus(code = HttpStatus.CREATED)
-	public ContributionData addSongwriterContribution(
-			@PathVariable Long songwriterId, @RequestBody ContributionData contributionData) {
-		log.info("Add songwriter contribution with ID={}", contributionData);
-		return ensembleService.saveSongwriterContribution(songwriterId, contributionData);
+	//Retrieves a contribution through the REST API client.
+	@GetMapping("/contribution/{contributionId}")
+	public ContributionData retrieveContribution(@PathVariable Long contributionId) {
+		log.info("Retrieving contribution with ID={}", contributionId);
+		return ensembleService.retrieveContributionById(contributionId);
 	}
-	
 }

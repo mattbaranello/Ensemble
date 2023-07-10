@@ -18,6 +18,7 @@ import lombok.ToString;
 @Data
 public class Project {
 	
+	//Creates entity table with fields below.
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long projectId;
@@ -27,8 +28,14 @@ public class Project {
 	private int bpm;
 	private String genre;
 	
+	/*
+	 * Creates a one to many relationship between "Project" and "Songwriter". 
+	 * Creates a set of songwriters.
+	 */
 	@EqualsAndHashCode.Exclude
 	@ToString.Exclude
 	@OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<Songwriter> songwriters = new HashSet<>();
+	
+	
 }

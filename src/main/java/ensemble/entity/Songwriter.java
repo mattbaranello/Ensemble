@@ -19,7 +19,7 @@ import lombok.ToString;
 @Entity
 @Data
 public class Songwriter {
-	
+	//Creates entity table with fields below.
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long songwriterId;
@@ -27,13 +27,22 @@ public class Songwriter {
 	private String songwriterUsername;
 	private String songwriterEmail;
 	
+	/*
+	 * Creates a many to one relationship between "Songwriter" and "Project".
+	 * Joins column "project_id" as a foreign key.
+	 */
 	@EqualsAndHashCode.Exclude
 	@ToString.Exclude
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "project_id")
 	private Project project;
 	
-	
+	/*
+	 * Creates a many to many relationship between "Songwriter" and "contribution". 
+	 * Creates a set of contributions.
+	 * Creates a join table called "songwriter_contribution" and joins the primary keys from both tables
+	 * "songwriter_id" and "contribution_id".
+	 */
 	@EqualsAndHashCode.Exclude
 	@ToString.Exclude
 	@ManyToMany(cascade = CascadeType.PERSIST)

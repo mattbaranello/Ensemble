@@ -17,6 +17,7 @@ import ensemble.entity.Contribution;
 import ensemble.entity.Project;
 import ensemble.entity.Songwriter;
 
+
 @Service
 public class EnsembleService {
 	
@@ -67,6 +68,7 @@ public class EnsembleService {
 		return project;
 	}
 	
+	//Finds project by ID. If project can't be found, it will throw an exception message.
 	private Project findProjectById(Long projectId) {
 			return projectDao.findById(projectId)
 					.orElseThrow(() -> new NoSuchElementException(
@@ -84,7 +86,6 @@ public class EnsembleService {
 	 * If the project ID is null, then it will return the below exception message.
 	 * Otherwise, it will retrieve the Ensemble project.
 	 */
-	
 	@Transactional(readOnly = true)
 	public ProjectData retrieveEnsembleProjectById(Long projectId) {
 		Project project = findProjectById(projectId);
@@ -97,12 +98,20 @@ public class EnsembleService {
 		return new ProjectData(project);
 	}
 	
+	/*
+	 * Copies fields from the "ProjectSongwriter" object to the "Songwriter". It's a way to copy data from one object to another so that
+	 * fields can be updated.
+	 */
 	private void copySongwriterFields(Songwriter songwriter, ProjectSongwriter projectSongwriter) {
 		songwriter.setSongwriterId(projectSongwriter.getSongwriterId());
 		songwriter.setSongwriterUsername(projectSongwriter.getSongwriterUsername());
 		songwriter.setSongwriterEmail(projectSongwriter.getSongwriterEmail());
 	}
 	
+	/*
+	 * This method saves the data from the ProjectSongwriter object into a Songwriter object and 
+	 * then returning a new ProjectSongwriter object containing the saved data.
+	 */
 	@Transactional(readOnly = false)
 	public ProjectSongwriter saveSongwriter(Long projectId, ProjectSongwriter projectSongwriter) {
 		Project project = findProjectById(projectId);
@@ -118,6 +127,9 @@ public class EnsembleService {
 		
 	}
 	
+	/*
+	 * This method finds a songwriter by ID. If the songwriter ID is null, it will create an new songwriter object. 
+	 */
 	@Transactional(readOnly = false)
 	private Songwriter findOrAddSongwriterToProject(Long projectId, Long songwriterId) {
 		Songwriter songwriter;
@@ -130,50 +142,27 @@ public class EnsembleService {
 		}
 		return songwriter;
 	}
-	
-	
+	//Finds songwriter by ID. If the songwriter does not exist, it will throw an exception message
 	private Songwriter findSongwriterById(Long songwriterId) {
 		return songwriterDao.findById(songwriterId)
 				.orElseThrow(() -> new NoSuchElementException(
 						"Songwriter with ID=" + songwriterId + " was not found."));
 	}
-
-	private void copyContributionFields(Contribution contribution, ContributionData contributionData) {
-		contribution.setContributionId(contributionData.getContributionId());
-		contribution.setTimestamp(contributionData.getTimestamp());
+	
+	/*
+	 * This method retrieves a contribution by ID. If there is no contribution with the ID that the user inputs, 
+	 * it will return the exception message below in the "findContributionById" method.
+	 */
+	@Transactional(readOnly = true)
+	public ContributionData retrieveContributionById(Long contributionId) {
+		
+			Contribution contribution = findContributionById(contributionId);
+			return new ContributionData(contribution);
 	}
 	
-	public ContributionData saveSongwriterContribution(Long songwriterId, ContributionData contributionData) {
-		Songwriter songwriter = findSongwriterById(songwriterId);
-		Long contributionId = contributionData.getContributionId();
-		Contribution contribution = findOrCreateContribution(contributionId);
-		
-		copyContributionFields(contribution, contributionData);
-		contribution.getSongwriters().add(songwriter);
-		songwriter.getContributions().add(contribution);
-	    
-		Contribution dbContribution = contributionDao.save(contribution);
-		
-		return new ContributionData(dbContribution);
-	}
-
-	private Contribution findOrCreateContribution(Long contributionId) {
-		Contribution contribution;
-		
-		if(Objects.isNull(contributionId)) {
-			contribution = new Contribution();
-		}
-		else {
-			contribution = findContributionById(contributionId);
-		}
-		return contribution;
-	}
-
 	private Contribution findContributionById(Long contributionId) {
-		Contribution contribution = contributionDao.findById(contributionId)
+		return contributionDao.findById(contributionId)
 				.orElseThrow(() -> new NoSuchElementException("Contribution not found."));
-		
-		return contribution;
 	}
 }
 	

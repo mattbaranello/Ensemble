@@ -18,19 +18,27 @@ import lombok.ToString;
 @Entity
 @Data
 public class Contribution {
-	
+	//Creates entity table with fields below.
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long contributionId;
 	
 	private String timestamp;
 	
+	/*
+	 * Creates a many to one relationship between "Contribution" and "Project".
+	 * Joins column "project_id" as a foreign key.
+	 */
 	@EqualsAndHashCode.Exclude
 	@ToString.Exclude
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "project_id", nullable = false)
 	private Project project;
 	
+	/*
+	 * Creates a many to many relationship between "Contribution" and "Songwriter". 
+	 * Creates a set of songwriters.
+	 */
 	@EqualsAndHashCode.Exclude
 	@ToString.Exclude
 	@ManyToMany(mappedBy = "contributions", cascade = CascadeType.PERSIST)

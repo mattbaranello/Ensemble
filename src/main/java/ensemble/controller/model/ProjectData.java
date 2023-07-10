@@ -22,6 +22,7 @@ public class ProjectData {
 	
 	private Set<ProjectSongwriter> projectSongwriters = new HashSet<>();
 	
+	// Constructor to create a ProjectData object from a Project
 	public ProjectData(Project project) {
 		this.projectId = project.getProjectId();
 		this.creationDate = project.getCreationDate();
@@ -29,11 +30,16 @@ public class ProjectData {
 		this.bpm = project.getBpm();
 		this.genre = project.getGenre();
 		
+		/*
+		 * Iterate over each Songwriter in the Project's songwriters list
+		 * Create a new ProjectSongwriter object using the current Songwriter
+		 * 	and add it to the projectSongwriters set
+		 */
 		for(Songwriter songwriter : project.getSongwriters()) {
 			this.projectSongwriters.add(new ProjectSongwriter(songwriter));
 			}
 		}
-	
+		
 		@Data
 		@NoArgsConstructor
 		public static class ProjectSongwriter {
@@ -43,11 +49,17 @@ public class ProjectData {
 			private String songwriterEmail;
 			private Set<ContributionData> contributionData = new HashSet<>();
 			
+			// Constructor to create a ProjectSongwriter object from a Songwriter
 			public ProjectSongwriter(Songwriter songwriter) {
 				this.songwriterId = songwriter.getSongwriterId();
 				this.songwriterUsername = songwriter.getSongwriterUsername();
 				this.songwriterEmail = songwriter.getSongwriterEmail();
-				
+			
+			/*
+			 *  Iterate over each Contribution in the Songwriter's contributions list
+			 *  Create a new ContributionData object using the current Contribution
+			 *	and add it to the contributionData set
+			 */ 
 			for(Contribution contribution : songwriter.getContributions()) {
 				this.contributionData.add(new ContributionData(contribution));
 			}
@@ -61,12 +73,17 @@ public class ProjectData {
 			private String timestamp;
 			private Set<ProjectSongwriter> projectSongwriters = new HashSet<>();
 			
+			// Constructor to create a ContributionData object from a Contribution
 			public ContributionData(Contribution contribution) {
-				this.contributionId = contribution.getContributionId();
-				this.timestamp = contribution.getTimestamp();
-				
+				contributionId = contribution.getContributionId();
+				timestamp = contribution.getTimestamp();
+			
+			/* Iterate over each Songwriter in the Contribution's songwriters list
+			 * Create a new ProjectSongwriter object using the current Songwriter
+			 * and add it to the projectSongwriters set
+			 */ 
 			for(Songwriter songwriter : contribution.getSongwriters()) {
-				this.projectSongwriters.add(new ProjectSongwriter(songwriter));
+				projectSongwriters.add(new ProjectSongwriter(songwriter));
 				}
 			}	
 		}
